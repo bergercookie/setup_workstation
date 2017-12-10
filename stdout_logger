@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+base=`dirname ${BASH_SOURCE[0]}`
+
+function stdout_logger()
+{
+    # TODO Validate output
+
+    level=$1
+    msg=${@:2}
+    color=
+    if [[ "${level}" = "alert" ]]; then
+        color="${BRed}"
+    elif [[ "${level}" = "critical" ]]; then
+        color="${IRed}"
+    elif [[ "${level}" = "error" ]]; then
+        color="${Red}"
+    elif [[ "${level}" = "warning" ]]; then
+        color="${Yellow}"
+    elif [[ "${level}" = "notice" ]]; then
+        color="${Gray}"
+    elif [[ "${level}" = "info" ]]; then
+        color="${Green}"
+    elif [[ "${level}" = "debug" ]]; then
+        color="${Purple}"
+    fi
+
+    echo -e "${color}[${level}]${Color_Off} ${msg}"
+} # end of stdout_logger
+
+stdout_logger ${1} ${@:2}

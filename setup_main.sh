@@ -1,83 +1,45 @@
 #!/usr/bin/env bash
 
-OS_NAME=`uname`
-DISTRO_NAME=`head -n 1 /etc/os-release | cut -d '"' -f2`
+export OS_NAME=`uname`
+export DISTRO_NAME=`head -n 1 /etc/os-release | cut -d '"' -f2`
+export LOG_TO_FILE=false
 
+log=
+if [[ "${LOG_TO_FILE}" = true ]]; then
+    # initialize the logger
+    log=`dirname ${BASH_SOURCE[0]}`/third-party/lumberjack/lj
+else
+    log=`dirname ${BASH_SOURCE[0]}`/stdout_logger
+fi
+export log
 
+${log} info "Initializing..."
+${log} info "Operating System:  ${OS_NAME}"
+${log} info "Distribution: ${DISTRO_NAME}"
 
-# Use "@" to specify distribution for which this should be installed
-# Use "*" to specify ppa for debian distros
-declare -a SOFTWARE_SCIENCE=("libeigen3-dev" \
-                             "libboost-dev" \
-                             "libopencv-dev" \
-                             )
-declare -a SOFTWARE_ROBOTICS_SOURCE=( \
-    "mrpt@'ssh://git@bitbucket.com/bergercookie/mrpt.git'")
+${log} info "Specify the categories you want to install packages from: "
 
-declare -a SOFTWARE_PYTHON=("python" \
-                            "python3" \
-                            "pip" \
-                            "pip3" \
-                            )
-declare -a SOFTWARE_BUILD=("cmake" \
-                           "make" \
-                           "autogen" \
-                           )
-declare -a SOFTWARE_COMPILING=("gcc" \
-                               "g++" \
-                               "clang" \
-                               "clang++" \
-                               )
-declare -a SOFTWARE_ESSENTIAL=("ssh|openssh" \
-                               "bash-completion" \
-                               "tightvnc"
-                               "xclip" \
-                               "curl" \
-                               "${SOFTWARE_PYTHON[@]}" \
-                               "${SOFTWARE_BUILD[@]}" \
-                               "${SOFTWARE_COMPILING[@]}" \
-                               "git" \
-                               "keychain" \
-                               "vim" \
-                               "vim-gnome" \
-                               "gdbgui" \
-                               )
-declare -a SOFTWARE_FANCY=("cowsay" \
-                           "fortune|fortune-mod" \
-                           "variety@Debian" \
-                           "variety@Ubuntu*ppa:peterlevi/ppa" \
-                           "variety-slideshow@Ubuntu*ppa:peterlevi/ppa" \
-                           "exuberant-ctags@Debian@Ubuntu" \
-                           "ctags@Arch" \
-                           "multitail" \
-                           "pydf" \
-                           "mtr"
-                           )
-declare -a SOFTWARE_CRYPTO=("pass" \
-                            "gpg" \
-                            "gpg2" \
-                            "pinentry-ncurses" \
-                            "cryptsetup"
-                            )
-declare -a SOFTWARE_MULTIMEDIA=("vlc" \
-                                "okular" \
-                                "iw@Arch" \
-                                "wpa_supplicant@Arch" \
-                                "dialog@Arch" \
-                                )
+sudo -E bash -c "./install_category_packages.sh ESSENTIAL"
 
-declare -a SOFTWARE_GENERIC_SOURCE=("grive2@'https://github.com/vitalif/grive2'" \
-                           )
+${log} info "Setting up the computer ssh-key..."
 
-CATEGORY_NAMES="GENERIC_SOURCE MULTIMEDIA CRYPTO ESSENTIAL COMPILING BUILD
-PYTHON ROBOTICS_SOURCE SCIENCE"
-for category in `echo ${CATEGORY_NAMES}`
-do
-    name=SOFTWARE_${category}
-    echo ${name}
-done
+${log} info "Downloading dotfiles repository..."
 
-function install_package()
-{
-} # end of install package
+${log} info "Running post-download actions..."
+
+${log} info "Building indicated projects from source..."
+
+${log} info "Creating the necessary symlinks..."
+
+${log} info "Installing the fonts..."
+
+# CATEGORY_NAMES="GENERIC_SOURCE MULTIMEDIA CRYPTO ESSENTIAL COMPILING BUILD
+# PYTHON ROBOTICS_SOURCE SCIENCE"
+# for category in `echo ${CATEGORY_NAMES}`
+# do
+#     name=SOFTWARE_${category}
+#     echo ${name}
+# done
+
+log warning "Kalimera!"
 

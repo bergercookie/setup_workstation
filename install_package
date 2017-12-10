@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Parse the given package string
+# That may contain:
+# - target distro
+# - package name alternatives
+function parse_package_str()
+{
+    TAG_DISTRO="@"
+    TAG_PPA="*"
+    TAG_ALTERNATIVES="|"
+
+    # split the given string into subparts based on the tags found
+}
+
+function install_package()
+{
+    if [[ -z "${log}" ]]; then
+        echo "No logging module found. Exiting..."
+        exit 1
+    fi
+    if ! [[ "`id -u`" = 0 ]]; then
+        echo "Function ${FUNCNAME[0]} executed without superuser rights. Exiting..."
+        exit 1
+    fi
+
+    ${log} info "Installing package $1..."
+
+    if [[ "${DISTRO_NAME}" = "Debian" ]] || [[ "${DISTRO_NAME}" = "Ubuntu" ]]; then
+        install_package_debian ${@:1}
+    else
+        install_package_arch ${@:1}
+    fi
+} # end of install package
+
+function install_package_debian()
+{
+
+    if ! [[ -z "${UPDATE_PKG_CACHE}" ]]; then
+        sudo apt-get update
+    fi
+
+    apt-get install $1
+} # end of install_package_debian
+
+function install_package_arch()
+{
+    TODO-UNIMPLEMENTED-METHOD-${FUNCNAME[0]}
+    exit 1
+
+    pacman -S $1
+} # end of install_package_arch
+
+install_package ${@:1}
