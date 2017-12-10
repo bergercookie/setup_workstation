@@ -66,6 +66,14 @@ declare -a SOFTWARE_MULTIMEDIA=("vlc" \
 declare -a SOFTWARE_GENERIC_SOURCE=("grive2@'https://github.com/vitalif/grive2'" \
                            )
 
+# determine if pip is to be installed
+# TODO
+declare -a PIP_PACKAGES=("numpy" \
+                         "pandas" \
+                         "jedi" \
+                         )
+PIP_INSTALL="pip install --user"
+
 function install_category_packages()
 {
     source `dirname ${BASH_SOURCE[0]}`/install_package
