@@ -61,7 +61,11 @@ function install_package_debian()
         sudo apt-get update
     fi
 
-    apt-get install $1
+    require_yes_str="-y"
+    if  [[ ! -z ${REQUIRE_YES} ]]; then
+        require_yes_str=
+    fi
+    apt-get install ${require_yes_str} $1
 } # end of install_package_debian
 
 function install_package_arch()

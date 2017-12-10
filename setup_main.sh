@@ -8,11 +8,13 @@ export DOTFILES_LOCAL=${HOME}/dotfiles
 log=
 if [[ "${LOG_TO_FILE}" = true ]]; then
     # initialize the logger
-    log=`dirname ${BASH_SOURCE[0]}`/third-party/lumberjack/lj
+    log=`dirname ${BASH_SOURCE[0]}`/third-party/lumberjack/lj # Doesn't work in bash
 else
     log=`dirname ${BASH_SOURCE[0]}`/stdout_logger
 fi
 export log
+
+demand_yes_no="`dirname ${BASH_SOURCE[0]}`/demand_yes_no.sh"
 
 ${log} info "Initializing..."
 ${log} info "Operating System:  ${OS_NAME}"
@@ -20,65 +22,154 @@ ${log} info "Distribution: ${DISTRO_NAME}"
 
 ${log} info "Specify the categories you want to install packages from: "
 
-function root_install_package_category()
+function __root_install_package_category()
 {
-    sudo -E bash -c "./install_category_packages.sh $1"
-}
+    ${log} warning "Installing packages from category: ${category}"
+    # verify...
+    ${demand_yes_no}
+    [[ "$?" -eq 0 ]] && sudo -E bash -c "./install_category_packages.sh $1"
 
-category="ESSENTIAL"
-${log} warning "Installing packages from category: ${category}"
-# verify...
-answer=
-while [[ "`echo ${answer} | awk '{ print toupper($0) }'`" != "YES" ]] && \
-      [[ "`echo ${answer} | awk '{ print toupper($0) }'`" != "NO" ]];
-do
-    ${log} warning "Continue? [yes/no]"
-    read answer
-done
-root_install_package_category ${category}
+} # end of __root_install_package_category
+
+##############################################################################
+# Install packages
+# Get these from the Python npyscreens GUI
+# TODO
+${log} warning "Install binary packages now?"
+${demand_yes_no}
+if [[ "$?" -eq 0 ]]; then
+    indicated_categories="MULTIMEDIA CRYPTO ESSENTIAL COMPILING BUILD  PYTHON ROBOTICS_SOURCE SCIENCE"
+    indicated_src_categories="GENERIC_SOURCE ROBOTICS_SOURCE"
+    for category in `echo ${indicated_categories}`
+    do
+        __root_install_package_category ${category}
+    done
+fi
 
 GIT=`which git`
 SSH_KEYGEN=`which ssh-keygen`
 XCLIP=`which xclip`
+BROWSER=`which firefox`
+ID_RSA_PUBFILE=${HOME}/.ssh/id_rsa.pub
 
 ${log} info "Setting up the computer ssh-key..."
-ssh-keygen -t 'rsa'
+[[ -f ${ID_RSA_PUBFILE} ]] || ssh-keygen -t 'rsa'
 
+cat ${ID_RSA_PUBFILE} | ${XCLIP} -sel clip
 ${log} warning "Public key copied! Add it to your Github profile..."
-GITHUB_SSH_KEYS_PAGE="https://github.com/settings/keys"
-if [[ `./check_if_debian_based_distro.sh` = 0 ]]; then
-    `xdg-open firefox ${GITHUB_SSH_KEYS_PAGE}`
-fi
+GITHUB_SSH_KEYS_PAGE="https://github.com/settings/ssh/new"
+${BROWSER} ${GITHUB_SSH_KEYS_PAGE}&
 
 ${log} info "Don't worry, I'll wait here 'till you're done... :-)"
+${log} info "Press [ENTER] to continue..."
 read
 
 ${log} info "Downloading dotfiles repository..."
-${GIT} clone ssh://git@github.com/bergercookie/dotfiles-reborn dotfiles
+rm -rI ${DOTFILES_LOCAL} # clean up previous contents
+${GIT} clone --recursive ssh://git@github.com/bergercookie/dotfiles-reborn ${DOTFILES_LOCAL}
 ${log} info "Done!"
 
+##############################################################################
+# Post-Download
 ${log} info "Running post-download actions..."
 
 ${log} info "Compiling YCM"
 curdir=`pwd`
-cd ${DOTFILES}/vim/.vim/bundle/YouCompleteMe
+cd ${DOTFILES_LOCAL}/vim/.vim/bundle/YouCompleteMe
 ./install.py --all
 cd ${curdir}
 
+##############################################################################
 
 ${log} info "Building indicated projects from source..."
 
+# TODO
+
+##############################################################################
+# SYMLINKS
+
+function __make_symlink()
+{
+    curdir=`pwd`
+    cd ${HOME}
+    ln -sf "${DOTFILES_LOCAL}/$1"
+    cd ${curdir}
+} # end of __make_symlink
+
+function __make_bash_links()
+{
+    __make_symlink "bash/.bashrc"
+    __make_symlink "bash/.bashrc.linux"
+    __make_symlink "bash/.bashrc.local"
+} # end of __make_symlinks_bash
+function __make_vim_links()
+{
+    __make_symlink "vim/.vim"
+    __make_symlink "vim/.vimrc"
+} # end of __make_vim_links
+function __make_tmux_links()
+{
+    __make_symlink "tmux/.tmux"
+    __make_symlink "tmux/.tmux.conf"
+    __make_symlink "tmux/.tmux.conf.linux"
+} # end of __make_tmux_links
+function __make_git_links()
+{
+    __make_symlink "git/.gitconfig"
+} # end of __make_python_links
+function __make_python_links()
+{
+    __make_symlink "python/.pdbrc"
+} # end of __make_python_links
+function __make_gdb_links()
+{
+    __make_symlink "gdb/.gdbinit"
+} # end of __make_gdb_links
+function __make_firefox_links()
+{
+    __make_symlink "firefox/vimperator/.vimperator"
+    __make_symlink "firefox/vimperator/.vimperatorrc"
+} # end of __make_firefox_links
+function __make_ctags_links()
+{
+    __make_symlink "ctags/.ctags"
+} # end of __make_ctags_links
+function __make_terminator_links()
+{
+    curdir=`pwd`
+    dir_to_go="${HOME}/.config/terminator"
+    mkdir -p ${dir_to_go}; cd $!
+    ln -s "${DOTFILES_LOCAL}/terminator/config"
+    cd ${curdir}
+} # end of __make_terminator_links
+
 ${log} info "Creating the necessary symlinks..."
+curdir=`pwd`
+cd ${HOME}
+
+__make_bash_links
+__make_vim_links
+__make_tmux_links
+__make_git_links
+__make_python_links
+__make_gdb_links
+__make_firefox_links
+__make_ctags_links
+__make_terminator_links
+
+
+cd ${curdir}
+
+
+##############################################################################
 
 ${log} info "Installing the fonts..."
+cd $DOTFILES_LOCAL/fonts/powerline-fonts
+cd $DOTFILES_LOCAL/san
+./install.sh
+${log} info "Done!"
 
-# CATEGORY_NAMES="GENERIC_SOURCE MULTIMEDIA CRYPTO ESSENTIAL COMPILING BUILD
-# PYTHON ROBOTICS_SOURCE SCIENCE"
-# for category in `echo ${CATEGORY_NAMES}`
-# do
-#     name=SOFTWARE_${category}
-#     echo ${name}
-# done
+##############################################################################
 
 log warning "Kalimera!"
 

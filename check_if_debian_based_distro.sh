@@ -9,7 +9,8 @@ function __check_if_debian_based_distro()
         ret=1
     fi
 
-    return ret
+    return ${ret}
 } # __end of check_if_debian_based_distro
 
-__check_if_debian_based_distro ${@:1}
+ret=`__check_if_debian_based_distro ${@:1}`
+exit ${ret}

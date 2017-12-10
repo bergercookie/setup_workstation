@@ -2,7 +2,7 @@
 
 base=`dirname ${BASH_SOURCE[0]}`
 
-function stdout_logger()
+function __stdout_logger()
 {
     # TODO Validate output
 
@@ -28,4 +28,4 @@ function stdout_logger()
     echo -e "${color}[${level}]${Color_Off} ${msg}"
 } # end of stdout_logger
 
-stdout_logger ${1} ${@:2}
+__stdout_logger ${1} ${@:2}

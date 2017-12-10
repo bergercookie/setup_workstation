@@ -25,8 +25,9 @@ declare -a SOFTWARE_COMPILING=("gcc" \
                                )
 declare -a SOFTWARE_ESSENTIAL=("ssh|openssh" \
                                "bash-completion" \
-                               "tightvnc"
+                               "tightvnc" \
                                "xclip" \
+                               "terminator" \
                                "curl" \
                                "${SOFTWARE_PYTHON[@]}" \
                                "${SOFTWARE_BUILD[@]}" \
@@ -50,6 +51,8 @@ declare -a SOFTWARE_FANCY=("cowsay" \
                            "pydf" \
                            "mtr"
                            )
+declare -a SOFTWARE_PRODUCTION=("ansible" \
+                               )
 declare -a SOFTWARE_CRYPTO=("pass" \
                             "gpg" \
                             "gpg2" \
@@ -76,7 +79,7 @@ PIP_INSTALL="pip install --user"
 
 function install_category_packages()
 {
-    source `dirname ${BASH_SOURCE[0]}`/install_package
+    source `dirname ${BASH_SOURCE[0]}`/install_package.sh
 
     if [[ -z "${log}" ]]; then
         echo "No logging module found. Exiting..."
