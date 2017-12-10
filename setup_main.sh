@@ -157,19 +157,20 @@ __make_firefox_links
 __make_ctags_links
 __make_terminator_links
 
-
 cd ${curdir}
 
-
 ##############################################################################
+# Fonts
 
+curdir=`pwd`
 ${log} info "Installing the fonts..."
+${log} info "Installing Powerline fonts..."
 cd $DOTFILES_LOCAL/fonts/powerline-fonts
-cd $DOTFILES_LOCAL/san
 ./install.sh
+${log} info "Installing Apple SanFransisco fonts..."
+cd $DOTFILES_LOCAL/SanFranciscoFont
+cd ${curdir}
 ${log} info "Done!"
 
 ##############################################################################
-
-log warning "Kalimera!"
 
