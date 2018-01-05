@@ -1,3 +1,4 @@
+# Return 0 if we're running on a debian-based distro, otherwise 1
 function __check_if_debian_based_distro()
 {
     DISTRO_NAME=`head -n 1 /etc/os-release | cut -d '"' -f2`
@@ -12,5 +13,5 @@ function __check_if_debian_based_distro()
     return ${ret}
 } # __end of check_if_debian_based_distro
 
-ret=`__check_if_debian_based_distro ${@:1}`
-exit ${ret}
+__check_if_debian_based_distro ${@:1}
+exit $?

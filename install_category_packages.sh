@@ -14,6 +14,8 @@ declare -a SOFTWARE_PYTHON=("python" \
                             "pip" \
                             "pip3" \
                             )
+declare -a SOFTWARE_HASKELL=("ghc-mod" \
+                            )
 declare -a SOFTWARE_BUILD=("cmake" \
                            "make" \
                            "autogen" \
@@ -40,6 +42,8 @@ declare -a SOFTWARE_ESSENTIAL=("ssh|openssh" \
                                "libncurses-dev"
                                "ncurses-bin"
                                )
+declare -a SOFTWARE_TMUX=("urlview"
+                         )
 declare -a SOFTWARE_FANCY=("cowsay" \
                            "fortune|fortune-mod" \
                            "variety@Debian" \
@@ -74,6 +78,7 @@ declare -a SOFTWARE_GENERIC_SOURCE=("grive2@'https://github.com/vitalif/grive2'"
 declare -a PIP_PACKAGES=("numpy" \
                          "pandas" \
                          "jedi" \
+                         "vim-vint"
                          )
 PIP_INSTALL="pip install --user"
 
