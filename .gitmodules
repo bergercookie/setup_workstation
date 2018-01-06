@@ -1,0 +1,3 @@
+[submodule "scripts/dd008649e5c68247efcab4256fc32b8a"]
+	path = scripts/setup.franz.ubuntu.sh
+	url = https://gist.github.com/bergercookie/dd008649e5c68247efcab4256fc32b8a
