@@ -38,8 +38,12 @@ function __root_install_package_category()
 ${log} warning "Install binary packages now?"
 ${demand_yes_no}
 if [[ "$?" -eq 0 ]]; then
-    indicated_categories="MULTIMEDIA CRYPTO ESSENTIAL COMPILING BUILD  PYTHON ROBOTICS_SOURCE SCIENCE"
-    indicated_src_categories="GENERIC_SOURCE ROBOTICS_SOURCE"
+    indicated_categories=""
+    indicated_categories+="BUILD COMPILING CRYPTO ESSENTIAL MULTIMEDIA"
+    indicated_categories+="PYTHON HASKELL ROBOTICS_SOURCE SCIENCE"
+    indicated_categories+="TMUX FANCY PRODUCTIVITY "
+    indicated_src_categories+="GENERIC_SOURCE ROBOTICS_SOURCE"
+
     for category in `echo ${indicated_categories}`
     do
         __root_install_package_category ${category}
@@ -148,7 +152,7 @@ function __make_terminator_links()
     curdir=`pwd`
     dir_to_go="${HOME}/.config/terminator"
     mkdir -p ${dir_to_go}; cd $!
-    ln -s "${DOTFILES_LOCAL}/terminator/config"
+    ln -s "${DOTFILES_LOCAL}/terminator/config" .
     cd ${curdir}
 } # end of __make_terminator_links
 
@@ -176,10 +180,19 @@ ${log} info "Installing the fonts..."
 ${log} info "Installing Powerline fonts..."
 cd $DOTFILES_LOCAL/fonts/powerline-fonts
 ./install.sh
+${log} info "Installing awesome-terminal-fonts..."
+cd $DOTFILES_LOCAL/fonts/awesome-terminal-fonts
+./install.sh
 ${log} info "Installing Apple SanFransisco fonts..."
-cd $DOTFILES_LOCAL/SanFranciscoFont
+cd $DOTFILES_LOCAL/fonts/SanFranciscoFont
 cd ${curdir}
 ${log} info "Done!"
 
 ##############################################################################
+${log} warn "Installing Franz"
+setup_franz_script="`dirname ${BASH_SOURCE[0]}`/scripts/setup.franz.ubuntu.sh/setup-franz-ubuntu.sh"
+${setup_franz_script}
+
+${log} warn "Franz is set up. Move your configuration files if you have them backed up"
+read
 
