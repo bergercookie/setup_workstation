@@ -16,15 +16,30 @@ declare -a SOFTWARE_PYTHON=( \
     "pip" \
     "pip3" \
     )
+declare -a SOFTWARE_CPP=( \
+    doxygen \
+    )
+declare -a SOFTWARE_RUBY=( \
+    "ruby-bundler" \
+    "ruby" \
+    )
 declare -a SOFTWARE_HASKELL=( \
     "ghc" \
     "ghc-mod" \
     )
+declare -a SOFTWARE_PROGRAMMING_LANGUAGES=( \
+    "${SOFTWARE_PYTHON[@]}" \
+    "${SOFTWARE_CPP[@]}" \
+    "${SOFTWARE_HASKELL[@]}" \
+    "${SOFTWARE_RUBY[@]}" \
+    )
+
 declare -a SOFTWARE_BUILD=( \
     "cmake" \
     "make" \
     "autogen" \
     )
+
 declare -a SOFTWARE_COMPILING=( \
     "gcc" \
     "g++" \
@@ -38,7 +53,7 @@ declare -a SOFTWARE_ESSENTIAL=( \
     "xclip" \
     "terminator" \
     "curl" \
-    "${SOFTWARE_PYTHON[@]}" \
+    "${SOFTWARE_PROGRAMMING_LANGUAGES[@]}" \
     "${SOFTWARE_BUILD[@]}" \
     "${SOFTWARE_COMPILING[@]}" \
     "git" \
