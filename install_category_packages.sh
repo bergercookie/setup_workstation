@@ -36,6 +36,7 @@ declare -a SOFTWARE_PROGRAMMING_LANGUAGES=( \
 
 declare -a SOFTWARE_BUILD=( \
     "cmake" \
+    "cmake-curses-gui" \
     "make" \
     "autogen" \
     )
@@ -45,6 +46,7 @@ declare -a SOFTWARE_COMPILING=( \
     "g++" \
     "clang" \
     "clang++" \
+    "clang-format-3.8" \
     )
 declare -a SOFTWARE_ESSENTIAL=( \
     "ssh|openssh" \
@@ -53,9 +55,6 @@ declare -a SOFTWARE_ESSENTIAL=( \
     "xclip" \
     "terminator" \
     "curl" \
-    "${SOFTWARE_PROGRAMMING_LANGUAGES[@]}" \
-    "${SOFTWARE_BUILD[@]}" \
-    "${SOFTWARE_COMPILING[@]}" \
     "git" \
     "keychain" \
     "vim" \
@@ -63,6 +62,9 @@ declare -a SOFTWARE_ESSENTIAL=( \
     "gdbgui" \
     "libncurses-dev" \
     "ncurses-bin" \
+    "${SOFTWARE_PROGRAMMING_LANGUAGES[@]}" \
+    "${SOFTWARE_BUILD[@]}" \
+    "${SOFTWARE_COMPILING[@]}" \
     )
 declare -a SOFTWARE_TMUX=( \
     "urlview" \

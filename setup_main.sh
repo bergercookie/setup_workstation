@@ -77,11 +77,11 @@ ${log} info "Done!"
 # Post-Download
 ${log} info "Running post-download actions..."
 
-${log} info "Compiling YCM"
-curdir=`pwd`
-cd "${DOTFILES_LOCAL}/vim/.vim/bundle/YouCompleteMe"
-./install.py --all
-cd "${curdir}"
+# ${log} info "Compiling YCM"
+# curdir=`pwd`
+# cd "${DOTFILES_LOCAL}/vim/.vim/bundle/YouCompleteMe"
+# ./install.py --all
+# cd "${curdir}"
 
 ${log} info "Compiling vimproc.vim"
 curdir=`pwd`
@@ -116,7 +116,7 @@ function __make_vim_links()
 {
     __make_symlink "vim/.vim"
     __make_symlink "vim/.vimrc"
-    __make_symlink "vim/.ycm_extra_conf.py"
+    # __make_symlink "vim/.ycm_extra_conf.py"
     __make_symlink "vim/.vintrc.yaml"
 } # end of __make_vim_links
 function __make_tmux_links()
